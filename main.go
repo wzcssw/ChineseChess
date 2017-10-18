@@ -1,8 +1,8 @@
 package main
 
 import (
-	"chineseXiangqi/public/chess"
-	"chineseXiangqi/public/tools"
+	"chineseXiangqi/chess"
+	"chineseXiangqi/tools"
 	"encoding/json"
 	"fmt"
 	"sync"

@@ -1,7 +1,7 @@
 package chess
 
 import (
-	"chineseXiangqi/public/tools"
+	"chineseXiangqi/tools"
 	"fmt"
 	"strconv"
 	"strings"
@@ -9,13 +9,6 @@ import (
 
 // Point 坐标
 type Point [2]int
-
-// // Map 棋盘
-// type Map struct {
-// 	BJiangJun Point
-// 	RZU1      Point
-// 	RZU2      Point
-// }
 
 // Map 棋盘
 type Map map[string]Point
