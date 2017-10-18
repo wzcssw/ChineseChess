@@ -1,0 +1,36 @@
+.block{
+    margin: 3px;
+    float: left;
+    display: block;
+    width: 58px;
+    height: 58px;
+    background-color: rgba(255, 255, 0, 0.166);
+    border: solid;
+    cursor: pointer;
+}
+
+.red{
+    background-color: red;
+}
+
+.green{
+    background-color: green;
+}
+
+.blue{
+    background-color: blue;
+}
+
+.yellow{
+    background-color: yellow;
+}
+
+input{
+    height: 22px;
+    width: 80;
+}
+
+button{
+    height: 28px;
+    width: 40;
+}
