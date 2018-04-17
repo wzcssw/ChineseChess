@@ -1,7 +1,7 @@
 package chess
 
 import (
-	"chineseXiangqi/tools"
+	"ChineseChess/tools"
 	"fmt"
 	"strconv"
 	"strings"
