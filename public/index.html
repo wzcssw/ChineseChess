@@ -10,6 +10,7 @@
     <body>
         <div class="panel">
             <h1 id="hi_title">Xq</h1>
+            
             <p id="output"></p>
             <table>
                 <tr>
@@ -24,11 +25,18 @@
                     <td>下一步: </td>
                     <td><span id="next_term"></span></td>
                 </tr>
+                <tr>
+                    <td colspan="2">
+                        <input id="username"/>
+                        <button onclick="save_username()">Save</button>
+                    </td>
+                </tr>
             </table>
         </div>
         
         <div id="chess_map" style="width:630px;height:700px;border: solid;margin-left: 27%;"></div>
 
-        <div style="border: solid;color:blue;width:622px;margin-left: 27%;position: absolute;top: 556px;"></div>
+        <!-- 楚河 -->
+        <!-- <div style="border: solid;color:blue;width:622px;margin-left: 27%;position: absolute;top: 556px;"></div> -->
     </body>
 </html>

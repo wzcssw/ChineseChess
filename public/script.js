@@ -3,7 +3,7 @@ var player_name;
 var chess_map;
 var selected_chess;
 var chess_term;
-var user_id;
+var user_id = null;
 var current_color;
 var loc = window.location;
 var uri = 'ws:';
@@ -13,6 +13,7 @@ if (loc.protocol === 'https:') {
 }
 uri += '//' + loc.host;
 uri += loc.pathname + 'ws';
+
 ws = new WebSocket(uri);
 if(window.WebSocket != undefined) {
   $("#connect_status").html("浏览器不支持websockets");
@@ -121,14 +122,8 @@ function send_msg(user_id,player_name,operate,origin,target){
 }
 //// block controller end
 
-var set_player_name_default = function(){
-  player_name = "cheng";
-  console.log("init default method")
-  if(player_name){
-      $("#hi_title").html(player_name);
-      // send_msg(user_id,player_name,"INIT_GAME","","");
-      send_msg(user_id,player_name,"RELOAD_GAME","","");
-  }
+var connect_to_server = function(){
+  send_msg(user_id,player_name,"RELOAD_GAME","","");
 };
 
 
@@ -160,13 +155,16 @@ var clear = function (){ //清除焦点
   $(".block").css("background-color","rgba(255, 255, 0, 0.166)");
 }
 
+var save_username = function(){
+  var username = $("#username").val();
+  setCookie("chinese_chess_username",username);
+}
+
 $().ready(function(){
   user_id = getCookie('chinese_chess_user_id');
-  setTimeout("set_player_name_default()",500);
-  $("#restart").click(function(){
-    send_msg(user_id,player_name,"RELOAD_GAME","","");
-  });
-  $("#clear_btn").click(clear);
+  player_name = getCookie('chinese_chess_username');
+  $("#hi_title").html(player_name);
+  setTimeout("connect_to_server()",500);
 });
 
 function getCookie(name){
@@ -176,4 +174,10 @@ function getCookie(name){
   else
     return null;
 }
-// save player name end
+
+function setCookie(c_name,value,expiredays){
+  var exdate=new Date()
+  exdate.setDate(exdate.getDate()+expiredays)
+  document.cookie=c_name+ "=" +escape(value)+
+  ((expiredays==null) ? "" : ";expires="+exdate.toGMTString())
+}
