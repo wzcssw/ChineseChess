@@ -9,7 +9,7 @@ import (
 type ChessPool map[string]*Chess
 
 // MainChess 棋盘
-var MainChessPool = make(map[string]*Chess)
+var MainChessPool = make(ChessPool)
 
 func (cp *ChessPool) GetUsersChess(userID string) *Chess {
 	//  查找userID已经参与的Chess
