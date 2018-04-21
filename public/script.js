@@ -50,23 +50,47 @@ var msg_process = function(chess){
     current_color = "B"
   }
   showMsgToPanel();
+  render_chess(map);
+};
+
+var render_chess = function(map){
   $("#chess_map").html("");
-  for(var y = 9;y >=0; y--){
-    for(var x = 0;x <=8; x++){
-      str = "[" + x + "," + y + "]"
-      if(map[str]==""){ // 无棋子坐标
-        $("#chess_map").append("<div class='block empty' onclick='chess_click(this,\""+map[str]+"\",\""+str+"\")'>"+map[str]+"<br>"+str+"</div>");
-      }else{
-        if(map[str][0]=="R"){
-          $("#chess_map").append("<div class='block r-chess' onclick='chess_click(this,\""+map[str]+"\",\""+str+"\")'>"+map[str]+"<br>"+str+"</div>");
+  if(current_color=="B"){
+    for(var y = 0;y <=9; y++){
+      for(var x = 8;x >=0; x--){
+        str = "[" + x + "," + y + "]"
+        if(map[str]==""){ // 无棋子坐标
+          $("#chess_map").append("<div class='block empty' onclick='chess_click(this,\""+map[str]+"\",\""+str+"\")'>"+map[str]+"<br>"+str+"</div>");
         }else{
-          $("#chess_map").append("<div class='block b-chess' onclick='chess_click(this,\""+map[str]+"\",\""+str+"\")'>"+map[str]+"<br>"+str+"</div>");
+          if(map[str][0]=="R"){
+            $("#chess_map").append("<div class='block r-chess' onclick='chess_click(this,\""+map[str]+"\",\""+str+"\")'>"+map[str]+"<br>"+str+"</div>");
+          }else{
+            $("#chess_map").append("<div class='block b-chess' onclick='chess_click(this,\""+map[str]+"\",\""+str+"\")'>"+map[str]+"<br>"+str+"</div>");
+          }
+          
         }
-        
       }
+      $("#chess_map").append("<br>");
     }
-    $("#chess_map").append("<br>");
+  }else{
+    for(var y = 9;y >=0; y--){
+      for(var x = 0;x <=8; x++){
+        str = "[" + x + "," + y + "]"
+        if(map[str]==""){ // 无棋子坐标
+          $("#chess_map").append("<div class='block empty' onclick='chess_click(this,\""+map[str]+"\",\""+str+"\")'>"+map[str]+"<br>"+str+"</div>");
+        }else{
+          if(map[str][0]=="R"){
+            $("#chess_map").append("<div class='block r-chess' onclick='chess_click(this,\""+map[str]+"\",\""+str+"\")'>"+map[str]+"<br>"+str+"</div>");
+          }else{
+            $("#chess_map").append("<div class='block b-chess' onclick='chess_click(this,\""+map[str]+"\",\""+str+"\")'>"+map[str]+"<br>"+str+"</div>");
+          }
+          
+        }
+      }
+      $("#chess_map").append("<br>");
+    }
   }
+  
 };
 /////
 
