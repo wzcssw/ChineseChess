@@ -10,7 +10,7 @@ import (
 
 func RamdomTokenGenerator() string {
 	rand.Seed(time.Now().UnixNano())
-	x := rand.Intn(999999999999)
+	x := rand.Intn(1e11)
 	data := []byte(strconv.Itoa(x))
 	md5Ctx := md5.New()
 	md5Ctx.Write(data)

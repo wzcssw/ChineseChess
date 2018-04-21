@@ -2,7 +2,7 @@ package chess
 
 import (
 	"ChineseChess/lib"
-	"ChineseChess/tools"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"strconv"
@@ -16,7 +16,6 @@ type Chess struct {
 	term    int // 0: red   1: blue  2: over
 	RUserID string
 	BUserID string
-	// TranslateMap 	map[string]interface
 }
 
 // Point 坐标
@@ -33,9 +32,9 @@ func InitChess() *Chess {
 	return chessObj
 }
 
-func (cs *Chess) Print() map[string]interface{} {
+func (cs *Chess) Print() string {
 	if cs == nil {
-		return nil
+		return ""
 	}
 	result := make(map[string]interface{})
 	result["map"] = cs.Map.Print()
@@ -43,7 +42,8 @@ func (cs *Chess) Print() map[string]interface{} {
 	result["r_user_id"] = cs.RUserID
 	result["b_user_id"] = cs.BUserID
 
-	return result
+	bytes, _ := json.Marshal(result)
+	return string(bytes)
 }
 
 func (cs *Chess) TermString() string {
@@ -101,7 +101,7 @@ func InitMap() Map {
 }
 
 // Move 移动棋子
-func (mp *Map) Move(msg tools.Msg) (tools.Msg, error) {
+func (mp *Map) Move(msg lib.Msg) (lib.Msg, error) {
 	originChess := ""
 	for k, v := range *mp { // 找到对应棋子
 		str := "[" + strconv.Itoa(v[0]) + "," + strconv.Itoa(v[1]) + "]"
@@ -127,7 +127,7 @@ func (mp *Map) Move(msg tools.Msg) (tools.Msg, error) {
 }
 
 // Move 移动棋子
-func (cs *Chess) Move(msg tools.Msg) tools.Msg {
+func (cs *Chess) Move(msg lib.Msg) lib.Msg {
 	// cs.term
 	Msg, err := cs.Map.Move(msg)
 	if err == nil {
@@ -175,7 +175,7 @@ func (mp *Map) valid(originChess string, originPoint Point, targetPoint Point) b
 	} else if strings.Contains(originChess, "Zu") {
 		result = validZu(originChess, originPoint, targetPoint)
 	} else {
-		fmt.Println("这是啥?")
+		fmt.Println("No such chess.")
 	}
 	return result
 }
