@@ -7,6 +7,7 @@ var user_id;
 var current_color;
 var loc = window.location;
 var uri = 'ws:';
+
 if (loc.protocol === 'https:') {
   uri = 'wss:';
 }
@@ -15,12 +16,15 @@ uri += loc.pathname + 'ws';
 ws = new WebSocket(uri);
 if(window.WebSocket != undefined) {
   $("#connect_status").html("浏览器不支持websockets");
+  $("#connect_status").css("color","red");
 };
 ws.onopen = function() {
   $("#connect_status").html("已连接");
+  $("#connect_status").css("color","green");
 };
 ws.onclose = function (evt) {
   $("#connect_status").html("连接已关闭");
+  $("#connect_status").css("color","red");
 }; 
 ws.onmessage = function(evt) {
   if(evt){
@@ -58,53 +62,48 @@ var render_chess = function(map){
   if(current_color=="B"){
     for(var y = 0;y <=9; y++){
       for(var x = 8;x >=0; x--){
-        str = "[" + x + "," + y + "]"
-        if(map[str]==""){ // 无棋子坐标
-          $("#chess_map").append("<div class='block empty' onclick='chess_click(this,\""+map[str]+"\",\""+str+"\")'>"+map[str]+"<br>"+str+"</div>");
-        }else{
-          if(map[str][0]=="R"){
-            $("#chess_map").append("<div class='block r-chess' onclick='chess_click(this,\""+map[str]+"\",\""+str+"\")'>"+map[str]+"<br>"+str+"</div>");
-          }else{
-            $("#chess_map").append("<div class='block b-chess' onclick='chess_click(this,\""+map[str]+"\",\""+str+"\")'>"+map[str]+"<br>"+str+"</div>");
-          }
-          
-        }
+        appent_chess_dom(map,x,y);
       }
       $("#chess_map").append("<br>");
     }
   }else{
     for(var y = 9;y >=0; y--){
       for(var x = 0;x <=8; x++){
-        str = "[" + x + "," + y + "]"
-        if(map[str]==""){ // 无棋子坐标
-          $("#chess_map").append("<div class='block empty' onclick='chess_click(this,\""+map[str]+"\",\""+str+"\")'>"+map[str]+"<br>"+str+"</div>");
-        }else{
-          if(map[str][0]=="R"){
-            $("#chess_map").append("<div class='block r-chess' onclick='chess_click(this,\""+map[str]+"\",\""+str+"\")'>"+map[str]+"<br>"+str+"</div>");
-          }else{
-            $("#chess_map").append("<div class='block b-chess' onclick='chess_click(this,\""+map[str]+"\",\""+str+"\")'>"+map[str]+"<br>"+str+"</div>");
-          }
-          
-        }
+        appent_chess_dom(map,x,y);
       }
       $("#chess_map").append("<br>");
     }
   }
   
 };
+
+var appent_chess_dom = function(map,x,y){
+  str = "[" + x + "," + y + "]"
+  cls = "empty";
+  if (map[str][0]=="R"){
+    cls = "r-chess"
+  }else if(map[str][0]=="B"){
+    cls = "b-chess"
+  }
+  $("#chess_map").append("<div class=\"block "+cls+" \" onclick='chess_click(this,\""+map[str]+"\",\""+str+"\")'>"+map[str]+"<br>"+str+"</div>");
+}
 /////
 
 var showMsgToPanel = function(){
   if(chess_term == 1){
     $("#next_term").html("蓝棋");
+    $("#next_term").css("color","blue");
   }else{
     $("#next_term").html("红棋");
+    $("#next_term").css("color","red");
   }
 
   if("R"==current_color){
     $("#current_color").html("红棋");
+    $("#current_color").css("color","red");
   }else if ("B"==current_color){
     $("#current_color").html("蓝棋");
+    $("#current_color").css("color","blue");
   }
   
 };
@@ -150,7 +149,6 @@ var chess_click = function(self,chess,point){
     if (chess==""){
       return 
     }
-    $("#selected_chess").html(chess+point);
     selected_chess = point;
     $(self).css("background-color","red");
   }

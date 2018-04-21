@@ -2,25 +2,33 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>XiangQi</title>
+  <title>Chess</title>
   <script src="/jquery.1.91.min.js"></script>
   <script src="/script.js"></script>
   <link rel="stylesheet" href="/style.css">
 </head>
     <body>
-        <h1 id="hi_title">Xq</h1>
-        <p id="output"></p>
-        <span style="color: blue">连接状态:<span id="connect_status"></span></span><br>
-        <span style="color: red">已选中:<span id="selected_chess"></span></span><br>
-        <span style="color: rgb(232, 185, 0)">当前阵营:<span id="current_color"></span></span><br>
-        <span style="color: green">下一步:<span id="next_term"></span></span>
-        <hr>
-        <input type="text" placeholder="nick" id="player_name_input">
-        <button type="button" id="ok_btn">OK</button><br>
-        <button type="button" id="clear_btn">清焦</button>
-        <button type="button" id="restart">重开</button>
-        <div id="chess_map" style="width:630px;height:700px;border: solid;margin-left: 27%;">
+        <div class="panel">
+            <h1 id="hi_title">Xq</h1>
+            <p id="output"></p>
+            <table>
+                <tr>
+                    <td>连接状态: </td>
+                    <td><span id="connect_status"></span></td>
+                </tr>
+                <tr>
+                    <td>当前阵营: </td>
+                    <td><span id="current_color"></span></td>
+                </tr>
+                <tr>
+                    <td>下一步: </td>
+                    <td><span id="next_term"></span></td>
+                </tr>
+            </table>
         </div>
+        
+        <div id="chess_map" style="width:630px;height:700px;border: solid;margin-left: 27%;"></div>
+
         <div style="border: solid;color:blue;width:622px;margin-left: 27%;position: absolute;top: 556px;"></div>
     </body>
 </html>

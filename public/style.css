@@ -44,3 +44,15 @@ button{
     height: 28px;
     width: 40;
 }
+
+.panel{
+    display: block;
+    border: 1px solid;
+    width: 17%;
+    height: 180px;
+    padding: 2px;
+
+    position: fixed;
+    top: 5;
+    left: 5;
+}
