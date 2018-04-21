@@ -2,6 +2,9 @@
 var player_name;
 var chess_map;
 var selected_chess;
+var chess_term;
+var user_id;
+var current_color;
 var loc = window.location;
 var uri = 'ws:';
 if (loc.protocol === 'https:') {
@@ -22,13 +25,13 @@ ws.onclose = function (evt) {
 ws.onmessage = function(evt) {
   if(evt){
     var msg = evt.data;
-    console.log(msg);
+    console.log("CC",msg)
     obj = JSON.parse(msg);
     if(obj){
       clear();
-      console.log(msg);
       msg_process(obj);
     }else{
+      console.log('数据错误',evt)
       alert('数据错误');
     }
   }else{
@@ -38,89 +41,91 @@ ws.onmessage = function(evt) {
 //// websocket end
 
 /////
-var msg_process = function(msg){
+var msg_process = function(chess){
+  var map = chess.map;
+  chess_term = chess.term;
+  if (chess.r_user_id == user_id){ // 选择当前阵营
+    current_color = "R"
+  }else{
+    current_color = "B"
+  }
+  showMsgToPanel();
   $("#chess_map").html("");
   for(var y = 9;y >=0; y--){
     for(var x = 0;x <=8; x++){
-      str = "[" + x + "," + y + "]";
-      if(msg[str]==""){
-        msg[str]="x";
+      str = "[" + x + "," + y + "]"
+      if(map[str]==""){ // 无棋子坐标
+        $("#chess_map").append("<div class='block empty' onclick='chess_click(this,\""+map[str]+"\",\""+str+"\")'>"+map[str]+"<br>"+str+"</div>");
+      }else{
+        if(map[str][0]=="R"){
+          $("#chess_map").append("<div class='block r-chess' onclick='chess_click(this,\""+map[str]+"\",\""+str+"\")'>"+map[str]+"<br>"+str+"</div>");
+        }else{
+          $("#chess_map").append("<div class='block b-chess' onclick='chess_click(this,\""+map[str]+"\",\""+str+"\")'>"+map[str]+"<br>"+str+"</div>");
+        }
+        
       }
-      // $("#chess_map").append(msg[str]);
-      $("#chess_map").append("<div class='block' onclick='chess_click(this,\""+msg[str]+"\",\""+str+"\")'>"+msg[str]+"<br>"+str+"</div>");
     }
     $("#chess_map").append("<br>");
   }
 };
 /////
 
-// //// block controller start
-// document.onkeydown = function(event){
-//     var e = event || window.event || arguments.callee.caller.arguments[0];
-//     var offset_left = $("#"+player_name).position().left;
-//     var offset_top = $("#"+player_name).position().top;
-//     if(e && e.keyCode==37){ // Left
-//       move(player_name,offset_left-20,offset_top,send_msg);
-//     };
-//     if(e && e.keyCode==38){ // 按 Up 
-//       move(player_name,offset_left,offset_top-20,send_msg);
-//     };
-//     if(e && e.keyCode==39){ // 按 Right 
-//       move(player_name,offset_left+20,offset_top,send_msg);
-//     };
-//     if(e && e.keyCode==40){ // Down
-//       move(player_name,offset_left,offset_top+20,send_msg);
-//     };
-// };
+var showMsgToPanel = function(){
+  if(chess_term == 1){
+    $("#next_term").html("蓝棋");
+  }else{
+    $("#next_term").html("红棋");
+  }
 
-var move = function(player_name,left,top,callback){
+  if("R"==current_color){
+    $("#current_color").html("红棋");
+  }else if ("B"==current_color){
+    $("#current_color").html("蓝棋");
+  }
+  
+};
+
+var move = function(user_id,player_name,left,top,callback){
   $("#"+player_name).animate({left: left+"px",top: top+"px"},"fast");
   if(callback!=null){
     callback(player_name,origin,target);
   }
 };
 
-function send_msg(player_name,operate,origin,target){
-  ws.send(JSON.stringify({player_name,operate,origin,target}));
+
+function send_msg(user_id,player_name,operate,origin,target){
+  ws.send(JSON.stringify({user_id,player_name,operate,origin,target}));
 }
 //// block controller end
-
-// save player name start
-var set_player_name = function(){
-  if(!player_name){
-      var input = $("#player_name_input").val();
-      if(input == ""){
-        alert("alert");
-      }else{
-        player_name = input;
-        $("#hi_title").html(player_name);
-        add_block(player_name,0,0);
-        // ws.send(JSON.stringify({player_name,left,top}));
-        send_msg(player_name,0,0);
-      }
-  }
-};
 
 var set_player_name_default = function(){
   player_name = "cheng";
   console.log("init default method")
   if(player_name){
       $("#hi_title").html(player_name);
-      add_block(player_name,0,0);
-      // ws.send(JSON.stringify({player_name,left,top}));
-      send_msg(player_name,"INIT_GAME","","");
+      // send_msg(user_id,player_name,"INIT_GAME","","");
+      send_msg(user_id,player_name,"RELOAD_GAME","","");
   }
 };
 
-var add_block = function(name,top,left){
-  // $("body").append("<div style='left: "+left+"px;top: "+top+"px' class='block "+name+"' id='"+name+"'>"+name+"</div>");
-};
 
 // 棋子按下事件
 var chess_click = function(self,chess,point){
+  // 判断是否当前用户是否可以出棋
+  var cc = (current_color=="R" ? 0:1);
+  if(cc!=chess_term){
+    return 
+  }
+
   if(selected_chess){ // 如果之前已选中棋子
-    send_msg(player_name,"MOVE",selected_chess,point);
+    send_msg(user_id,player_name,"MOVE",selected_chess,point);
   }else{// 如果未选中棋子
+    if (chess[0]!=current_color){ //判断是否是自己的棋子
+      return
+    }
+    if (chess==""){
+      return 
+    }
     $("#selected_chess").html(chess+point);
     selected_chess = point;
     $(self).css("background-color","red");
@@ -134,13 +139,19 @@ var clear = function (){ //清除焦点
 }
 
 $().ready(function(){
+  user_id = getCookie('chinese_chess_user_id');
   setTimeout("set_player_name_default()",500);
-  $("#ok_btn").click(function(){
-    set_player_name();
-  });
   $("#restart").click(function(){
-    send_msg(player_name,"INIT_GAME","","");
+    send_msg(user_id,player_name,"RELOAD_GAME","","");
   });
   $("#clear_btn").click(clear);
 });
+
+function getCookie(name){
+  var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+  if(arr=document.cookie.match(reg))
+    return unescape(arr[2]);
+  else
+    return null;
+}
 // save player name end

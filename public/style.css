@@ -4,9 +4,19 @@
     display: block;
     width: 58px;
     height: 58px;
-    background-color: rgba(255, 255, 0, 0.166);
     border: solid;
     cursor: pointer;
+}
+.empty{
+    background-color: rgba(255, 255, 0, 0.166);
+}
+
+.r-chess{
+    background-color: #FF6666;
+}
+
+.b-chess{
+    background-color: #33FFFF;
 }
 
 .red{

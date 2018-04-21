@@ -1,11 +1,23 @@
 package chess
 
 import (
+	"ChineseChess/lib"
 	"ChineseChess/tools"
+	"errors"
 	"fmt"
 	"strconv"
 	"strings"
 )
+
+// 局
+type Chess struct {
+	ID      string
+	Map     Map
+	term    int // 0: red   1: blue  2: over
+	RUserID string
+	BUserID string
+	// TranslateMap 	map[string]interface
+}
 
 // Point 坐标
 type Point [2]int
@@ -14,8 +26,36 @@ type Point [2]int
 type Map map[string]Point
 type reversedMap map[string]string
 
-// InitInstance 生成对象
-func InitInstance() Map {
+func InitChess() *Chess {
+	chessObj := &Chess{}
+	chessObj.Map = InitMap()
+	chessObj.ID = lib.RamdomTokenGenerator()
+	return chessObj
+}
+
+func (cs *Chess) Print() map[string]interface{} {
+	if cs == nil {
+		return nil
+	}
+	result := make(map[string]interface{})
+	result["map"] = cs.Map.Print()
+	result["term"] = cs.term
+	result["r_user_id"] = cs.RUserID
+	result["b_user_id"] = cs.BUserID
+
+	return result
+}
+
+func (cs *Chess) TermString() string {
+	if cs.term == 0 {
+		return "R"
+	} else {
+		return "B"
+	}
+}
+
+// InitMap 生成对象
+func InitMap() Map {
 	chess := make(map[string]Point)
 	// 将军
 	chess["BJiangJun"] = Point{4, 9}
@@ -61,7 +101,7 @@ func InitInstance() Map {
 }
 
 // Move 移动棋子
-func (mp *Map) Move(msg tools.Msg) tools.Msg {
+func (mp *Map) Move(msg tools.Msg) (tools.Msg, error) {
 	originChess := ""
 	for k, v := range *mp { // 找到对应棋子
 		str := "[" + strconv.Itoa(v[0]) + "," + strconv.Itoa(v[1]) + "]"
@@ -71,16 +111,34 @@ func (mp *Map) Move(msg tools.Msg) tools.Msg {
 		}
 	}
 
+	if originChess == "" { // 如果选中目标为空
+		return msg, errors.New("选中目标为空")
+	}
+
 	targetPoint := ConvertStringToPoint(msg.Target)
 	originPoint := (*mp)[originChess]
 	if mp.valid(originChess, originPoint, targetPoint) {
 		mp.deleteChess(targetPoint) // 如果targetPoint有棋子则删除
 		(*mp)[originChess] = targetPoint
 	} else {
-		fmt.Println("错误走法:", originChess)
+		return msg, errors.New("走法违规")
 	}
-	fmt.Println(originChess)
-	return msg
+	return msg, nil
+}
+
+// Move 移动棋子
+func (cs *Chess) Move(msg tools.Msg) tools.Msg {
+	// cs.term
+	Msg, err := cs.Map.Move(msg)
+	if err == nil {
+		if cs.RUserID == msg.UserID {
+			cs.term = 1
+		} else {
+			cs.term = 0
+		}
+	}
+
+	return Msg
 }
 
 // deleteChess 如果targetPoint有棋子则删除
