@@ -43,6 +43,27 @@ ws.onmessage = function(evt) {
     alert('服务器错误');
   }
 };
+
+this.send = function (message, callback) {  
+  this.waitForConnection(function () {  
+      ws.send(message);  
+      if (typeof callback !== 'undefined') {  
+        callback();  
+      }  
+  }, 1000);  
+};
+
+this.waitForConnection = function (callback, interval) {  
+  if (ws.readyState === 1) {  
+      callback();  
+  } else {  
+      var that = this;  
+      // optional: implement backoff for interval here  
+      setTimeout(function () {  
+          that.waitForConnection(callback, interval);  
+      }, interval);  
+  }  
+};  
 //// websocket end
 
 /////
@@ -118,7 +139,7 @@ var move = function(user_id,player_name,left,top,callback){
 
 
 function send_msg(user_id,player_name,operate,origin,target){
-  ws.send(JSON.stringify({user_id,player_name,operate,origin,target}));
+  this.send(JSON.stringify({user_id,player_name,operate,origin,target}));
 }
 //// block controller end
 
