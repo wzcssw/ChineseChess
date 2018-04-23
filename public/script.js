@@ -3,6 +3,7 @@ var player_name;
 var chess_map;
 var selected_chess;
 var chess_term;
+var chess_status;
 var user_id = null;
 var current_color;
 var loc = window.location;
@@ -72,6 +73,7 @@ this.waitForConnection = function (callback, interval) {
 var msg_process = function(chess){
   var map = chess.map;
   chess_term = chess.term;
+  chess_status = chess.status;
   if (chess.r_user_id == user_id){ // 选择当前阵营
     current_color = "R"
   }else{
@@ -79,6 +81,17 @@ var msg_process = function(chess){
   }
   showMsgToPanel();
   render_chess(map);
+  do_chess_message(chess.message);
+};
+
+var do_chess_message = function(message){
+  if( message.indexOf("_WIN")!=-1){ // 判断输赢
+    if(message[0]==current_color){
+      alert("你赢了！");
+    }else{
+      alert("你败了~");
+    }
+  }
 };
 
 var render_chess = function(map){
@@ -172,10 +185,13 @@ var connect_to_server = function(){
 
 // 棋子按下事件
 var chess_click = function(self,chess,point){
+  if(chess_status=="FINISHED"){
+    return;
+  }
   // 判断是否当前用户是否可以出棋
   var cc = (current_color=="R" ? 0:1);
   if(cc!=chess_term){
-    return 
+    return;
   }
 
   if(selected_chess){ // 如果之前已选中棋子
