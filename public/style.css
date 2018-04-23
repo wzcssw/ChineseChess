@@ -69,6 +69,7 @@ button{
     width: 33px;
     height: 700px;
     background: url('./img/chess_map.jpg');
+    border-right: 2px solid #733210;
 }
 .map_border_right{
     position: absolute;
@@ -76,6 +77,7 @@ button{
     width: 35px;
     height: 700px;
     background: url('./img/chess_map.jpg'); 
+    border-left: 2px solid #733210;
 }
 .map_border_top{
     position: absolute;
@@ -91,7 +93,7 @@ button{
     height: 35px;
     background: url('./img/chess_map_bottom.png'); 
 }
-/* .RZu1{
+.RZu1{
     z-index: 1000;
     background: url('./img/red_zu.png') no-repeat;
     background-size: contain;
@@ -250,7 +252,7 @@ button{
     z-index: 1000;
     background: url('./img/black_jiang.png') no-repeat;
     background-size: contain;
-} */
+}
 .point_hook{
     position: absolute;
     width: 100%;
