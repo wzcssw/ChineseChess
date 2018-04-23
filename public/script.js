@@ -60,33 +60,53 @@ var msg_process = function(chess){
 
 var render_chess = function(map){
   $("#chess_map").html("");
+  var count = 0;
   if(current_color=="B"){
     for(var y = 0;y <=9; y++){
       for(var x = 8;x >=0; x--){
-        appent_chess_dom(map,x,y);
+        count++;
+        if(count>=37 && count<=45){
+          appent_chess_dom(map,x,y,'river-bottom');
+        }else if(count>=46 && count<=54){
+          appent_chess_dom(map,x,y,'river-top');
+        }else{
+          appent_chess_dom(map,x,y);
+        }
       }
-      
     }
   }else{
     for(var y = 9;y >=0; y--){
       for(var x = 0;x <=8; x++){
-        appent_chess_dom(map,x,y);
+        count++;
+        if(count>=37 && count<=45){
+          appent_chess_dom(map,x,y,'river-bottom');
+        }else if(count>=46 && count<=54){
+          appent_chess_dom(map,x,y,'river-top');
+        }else{
+          appent_chess_dom(map,x,y);
+        }
       }
-      
     }
   }
   
 };
 
-var appent_chess_dom = function(map,x,y){
+var appent_chess_dom = function(map,x,y,river){
   str = "[" + x + "," + y + "]"
   cls = "empty";
+  if(river){
+    cls+=' '+river;
+  }
   if (map[str][0]=="R"){
     cls = "r-chess"
   }else if(map[str][0]=="B"){
     cls = "b-chess"
   }
-  $("#chess_map").append("<div class=\"block "+cls+" \" onclick='chess_click(this,\""+map[str]+"\",\""+str+"\")'>"+map[str]+"<br>"+str+"</div>");
+  if(cls.substring(0,5) == "empty"){
+    $("#chess_map").append("<div class=\"block "+cls +" "+map[str]+" \" onclick='chess_click(this,\""+map[str]+"\",\""+str+"\")'><div class='line'></div><div class='vertical_line'></div></div>"); 
+  }else{
+    $("#chess_map").append("<div class=\"block "+cls +" "+map[str]+" \" onclick='chess_click(this,\""+map[str]+"\",\""+str+"\")'><div class='point_hook'></div></div>"); 
+  }
 }
 /////
 
@@ -145,14 +165,13 @@ var chess_click = function(self,chess,point){
       return 
     }
     selected_chess = point;
-    $(self).css("background-color","red");
+    $(self).find('.point_hook').css({"background":"url('./img/point.png') no-repeat","background-size":"contain"});
   }
 };
 
 var clear = function (){ //清除焦点
   $("#selected_chess").html("");
   selected_chess = undefined;
-  $(".block").css("background-color","rgba(255, 255, 0, 0.166)");
 }
 
 var save_username = function(){
