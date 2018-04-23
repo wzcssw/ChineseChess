@@ -161,7 +161,7 @@ func (mp *Map) valid(originChess string, originPoint Point, targetPoint Point) b
 		return false
 	}
 	if strings.Contains(originChess, "JiangJun") {
-		result = validJiangJun(originChess, originPoint, targetPoint)
+		result = validJiangJun(mp, originChess, originPoint, targetPoint)
 	} else if strings.Contains(originChess, "Shi") {
 		result = validShi(originChess, originPoint, targetPoint)
 	} else if strings.Contains(originChess, "Xiang") {
@@ -175,21 +175,25 @@ func (mp *Map) valid(originChess string, originPoint Point, targetPoint Point) b
 	} else if strings.Contains(originChess, "Zu") {
 		result = validZu(originChess, originPoint, targetPoint)
 	} else {
-		fmt.Println("No such chess.")
 	}
 	return result
 }
 
 // 将军
-func validJiangJun(originChess string, originPoint Point, targetPoint Point) bool {
+func validJiangJun(mp *Map, originChess string, originPoint Point, targetPoint Point) bool {
 	result := false
-	// Next 一下代码还有点问题： 将军可以斜着走
+	if strings.Contains(mp.getChessName(targetPoint), "JiangJun") { // 如果目标是将军
+		countChess := mp.countLineChess(originPoint, targetPoint) == 0 // 线上的棋子数量为0
+		sameLine := originPoint[0] == targetPoint[0]                   // 在一条线上
+		if countChess && sameLine {
+			return true
+		}
+	}
 	if string(originChess[0]) == "B" { // 蓝棋
 		c1 := (targetPoint[0] > 2 && targetPoint[0] < 6)
 		c2 := targetPoint[1] > 6
 		c3 := (abs(targetPoint[0]-originPoint[0]) == 1) && (targetPoint[1] == originPoint[1]) // x走一步且y不动
 		c4 := (abs(targetPoint[1]-originPoint[1]) == 1) && (targetPoint[0] == originPoint[0]) // y走一步且x不动
-		fmt.Println(c1, c2, c3, c4)
 		if (c1 && c2) && (c3 || c4) {
 			result = true
 		}
@@ -198,7 +202,6 @@ func validJiangJun(originChess string, originPoint Point, targetPoint Point) boo
 		c2 := targetPoint[1] < 3
 		c3 := (abs(targetPoint[0]-originPoint[0]) == 1) && (targetPoint[1] == originPoint[1]) // x走一步且y不动
 		c4 := (abs(targetPoint[1]-originPoint[1]) == 1) && (targetPoint[0] == originPoint[0]) // y走一步且x不动
-		fmt.Println(c1, c2, c3, c4)
 		if (c1 && c2) && (c3 || c4) {
 			result = true
 		}
@@ -213,7 +216,6 @@ func validShi(originChess string, originPoint Point, targetPoint Point) bool {
 		c1 := (targetPoint[0] > 2 && targetPoint[0] < 6)
 		c2 := targetPoint[1] > 6
 		c3 := ((abs(targetPoint[0]-originPoint[0]) == 1) && (abs(targetPoint[1]-originPoint[1]) == 1)) // x,y都只走一步
-		fmt.Println(c1, c2, c3)
 		if c1 && c2 && c3 {
 			result = true
 		}
@@ -221,7 +223,6 @@ func validShi(originChess string, originPoint Point, targetPoint Point) bool {
 		c1 := (targetPoint[0] > 2 && targetPoint[0] < 6)
 		c2 := targetPoint[1] < 3
 		c3 := ((abs(targetPoint[0]-originPoint[0]) == 1) && (abs(targetPoint[1]-originPoint[1]) == 1)) // x,y都只走一步
-		fmt.Println(c1, c2, c3)
 		if c1 && c2 && c3 {
 			result = true
 		}
@@ -235,14 +236,12 @@ func validXiang(mp *Map, originChess string, originPoint Point, targetPoint Poin
 	if string(originChess[0]) == "B" { // 蓝棋
 		c1 := targetPoint[1] > 4
 		c2 := ((abs(targetPoint[0]-originPoint[0]) == 2) && (abs(targetPoint[1]-originPoint[1]) == 2)) // x,y都走2步
-		fmt.Println(c1, c2)
 		if c1 && c2 {
 			result = true
 		}
 	} else { // 红棋
 		c1 := targetPoint[1] < 5
 		c2 := ((abs(targetPoint[0]-originPoint[0]) == 2) && (abs(targetPoint[1]-originPoint[1]) == 2)) // x,y都走2步
-		fmt.Println(c1, c2)
 		if c1 && c2 {
 			result = true
 		}
@@ -262,7 +261,6 @@ func validMa(mp *Map, originChess string, originPoint Point, targetPoint Point) 
 	result := false
 	c1 := ((abs(targetPoint[0]-originPoint[0]) == 1) && (abs(targetPoint[1]-originPoint[1]) == 2)) // x走1步,y走2步
 	c2 := ((abs(targetPoint[0]-originPoint[0]) == 2) && (abs(targetPoint[1]-originPoint[1]) == 1)) // x走2步,y走1步
-	fmt.Println(c1, c2)
 	if (c1 && !c2) || (!c1 && c2) {
 		result = true
 	}
@@ -419,6 +417,18 @@ func (mp *Map) checkChess(targetPoint Point) bool {
 	for _, v := range *mp {
 		if (v[0] == targetPoint[0]) && (v[1] == targetPoint[1]) {
 			result = true
+			break
+		}
+	}
+	return result
+}
+
+// checkChess 检查该位置是否有棋子
+func (mp *Map) getChessName(targetPoint Point) string {
+	result := ""
+	for k, v := range *mp {
+		if (v[0] == targetPoint[0]) && (v[1] == targetPoint[1]) {
+			result = k
 			break
 		}
 	}
