@@ -44,6 +44,7 @@ ws.onmessage = function(evt) {
   }
 };
 
+// fix: Failed to execute `send` on `Websocket`: Still in CONNECTING state
 this.send = function (message, callback) {  
   this.waitForConnection(function () {  
       ws.send(message);  
@@ -53,6 +54,7 @@ this.send = function (message, callback) {
   }, 1000);  
 };
 
+// fix: Failed to execute `send` on `Websocket`: Still in CONNECTING state
 this.waitForConnection = function (callback, interval) {  
   if (ws.readyState === 1) {  
       callback();  
