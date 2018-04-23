@@ -16,6 +16,8 @@ type Chess struct {
 	term    int // 0: red   1: blue  2: over
 	RUserID string
 	BUserID string
+	Status  string
+	Message string
 }
 
 // Point 坐标
@@ -41,6 +43,8 @@ func (cs *Chess) Print() string {
 	result["term"] = cs.term
 	result["r_user_id"] = cs.RUserID
 	result["b_user_id"] = cs.BUserID
+	result["status"] = cs.Status
+	result["message"] = cs.Message
 
 	bytes, _ := json.Marshal(result)
 	return string(bytes)
@@ -137,8 +141,28 @@ func (cs *Chess) Move(msg lib.Msg) lib.Msg {
 			cs.term = 0
 		}
 	}
+	if leftJiangJun := cs.JiangJunHasKilled(); leftJiangJun != "" { // 判断是否有将军被吃
+		cs.Status = "FINISHED"
+		cs.Message = leftJiangJun + "_WIN"
+	}
 
 	return Msg
+}
+
+// JiangJunHasKilled 在将军只有一个的时候返回剩下将军的颜色
+func (cs *Chess) JiangJunHasKilled() string {
+	var colors []string
+	for k, _ := range cs.Map {
+		if k == "BJiangJun" {
+			colors = append(colors, "B")
+		} else if k == "RJiangJun" {
+			colors = append(colors, "R")
+		}
+	}
+	if len(colors) < 2 {
+		return colors[0]
+	}
+	return ""
 }
 
 // deleteChess 如果targetPoint有棋子则删除
@@ -423,7 +447,7 @@ func (mp *Map) checkChess(targetPoint Point) bool {
 	return result
 }
 
-// checkChess 检查该位置是否有棋子
+// getChessName 获得该位置的棋子名称
 func (mp *Map) getChessName(targetPoint Point) string {
 	result := ""
 	for k, v := range *mp {
