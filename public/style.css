@@ -278,3 +278,43 @@ button{
     top:auto !important;
     bottom: 0;
 }
+.map_top_slash_left{
+    width: 2px;
+    height: 202px;
+    position: absolute;
+    top: 2px;
+    left: 310px;
+    transform:rotate(135deg);
+    z-index: 100;
+    background: #733210;
+}
+.map_top_slash_right{
+    width: 2px;
+    height: 202px;
+    position: absolute;
+    top: 2px;
+    left: 315px;
+    transform:rotate(45deg);
+    z-index: 100;
+    background: #733210;
+}
+.map_bottom_slash_left{
+    width: 2px;
+    height: 202px;
+    position: absolute;
+    bottom: 2px;
+    left: 315px;
+    transform:rotate(135deg);
+    z-index: 100;
+    background: #733210;
+}
+.map_bottom_slash_right{
+    width: 2px;
+    height: 202px;
+    position: absolute;
+    bottom: 2px;
+    left: 312px;
+    transform:rotate(45deg);
+    z-index: 100;
+    background: #733210;
+}
