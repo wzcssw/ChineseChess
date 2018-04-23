@@ -56,3 +56,6 @@ button{
     top: 5;
     left: 5;
 }
+#chess_map{
+    background: url('./img/chess_map.jpg')
+}

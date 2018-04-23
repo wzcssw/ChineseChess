@@ -65,14 +65,14 @@ var render_chess = function(map){
       for(var x = 8;x >=0; x--){
         appent_chess_dom(map,x,y);
       }
-      $("#chess_map").append("<br>");
+      
     }
   }else{
     for(var y = 9;y >=0; y--){
       for(var x = 0;x <=8; x++){
         appent_chess_dom(map,x,y);
       }
-      $("#chess_map").append("<br>");
+      
     }
   }
   
