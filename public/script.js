@@ -138,11 +138,7 @@ var appent_chess_dom = function(map,x,y,river){
   }else if(map[str][0]=="B"){
     cls = "b-chess"
   }
-  if(cls.substring(0,5) == "empty"){
-    $("#chess_map").append("<div class=\"block "+cls +" "+map[str]+" \" onclick='chess_click(this,\""+map[str]+"\",\""+str+"\")'><div class='line'></div><div class='vertical_line'></div></div>"); 
-  }else{
-    $("#chess_map").append("<div class=\"block "+cls +" "+map[str]+" \" onclick='chess_click(this,\""+map[str]+"\",\""+str+"\")'><div class='point_hook'></div></div>"); 
-  }
+  $("#chess_map").append("<div class=\"block "+cls +" "+map[str]+" \" onclick='chess_click(this,\""+map[str]+"\",\""+str+"\")'><div class='point_hook'></div></div>"); 
 }
 /////
 
@@ -218,7 +214,24 @@ var save_username = function(){
   setCookie("chinese_chess_username",username);
 }
 
+var draw_map = function (){
+  var top = 33;
+  var left = 33;
+  for(var i=0;i<9;i++){
+    top += 70
+    $("#wrapper").append("<div class='map_horizontal_line' style='top: "+top+"px'></div>")
+  }
+
+  for(var i =0;i<7;i++){
+    left+=70;
+    $("#wrapper").append("<div class='map_vertical_top_line' style='left: "+left+"px'></div>")
+    $("#wrapper").append("<div class='map_vertical_bottom_line' style='left: "+left+"px'></div>")
+  }
+
+};
+
 $().ready(function(){
+  draw_map();
   user_id = getCookie('chinese_chess_user_id');
   player_name = getCookie('chinese_chess_username');
   $("#hi_title").html(player_name);
@@ -239,3 +252,4 @@ function setCookie(c_name,value,expiredays){
   document.cookie=c_name+ "=" +escape(value)+
   ((expiredays==null) ? "" : ";expires="+exdate.toGMTString())
 }
+

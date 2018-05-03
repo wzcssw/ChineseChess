@@ -280,19 +280,19 @@ button{
 }
 .map_top_slash_left{
     width: 2px;
-    height: 202px;
+    height: 199px;
     position: absolute;
-    top: 2px;
-    left: 310px;
+    top: 5px;
+    left: 312px;
     transform:rotate(135deg);
     z-index: 100;
     background: #733210;
 }
 .map_top_slash_right{
     width: 2px;
-    height: 202px;
+    height: 199px;
     position: absolute;
-    top: 2px;
+    top: 4px;
     left: 315px;
     transform:rotate(45deg);
     z-index: 100;
@@ -317,4 +317,32 @@ button{
     transform:rotate(45deg);
     z-index: 100;
     background: #733210;
+}
+
+.map_horizontal_line{
+    width: 562px;
+    height: 2px;
+    position: absolute;
+    top: 33px;
+    z-index: 100;
+    left: 33px;
+    background:#733210;
+}
+.map_vertical_top_line{
+    width: 2px;
+    height: 280px;
+    position: absolute;
+    top: 33px;
+    z-index: 100;
+    left: 103px;
+    background: #733210;
+}
+.map_vertical_bottom_line{
+    width: 2px;
+    height: 280px;
+    position: absolute;
+    bottom: 35px;
+    z-index: 100;
+    left: 103px;
+    background:#733210;
 }
